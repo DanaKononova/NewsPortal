@@ -34,9 +34,14 @@ class NewsViewModel @Inject constructor(
     }
 
     fun getNews() {
+        _loadingLiveData.value = true
         viewModelScope.launch(handler) {
-            _loadingLiveData.value = false
             _newsLiveData.value = repository.getNews()
+            _loadingLiveData.value = false
         }
+    }
+
+    fun setToken(token: String){
+        repository.setToken(token)
     }
 }
