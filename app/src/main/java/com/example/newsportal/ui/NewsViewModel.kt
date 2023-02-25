@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsportal.R
 import com.example.newsportal.data.dataBase.NewsEntity
 import com.example.newsportal.domain.Repository
+import com.example.newsportal.domain.models.NewsData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -17,8 +18,8 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {
-    private val _newsLiveData = MutableLiveData<List<NewsEntity>>()
-    val newsLiveData: LiveData<List<NewsEntity>> get() = _newsLiveData
+    private val _newsLiveData = MutableLiveData<List<NewsData>>()
+    val newsLiveData: LiveData<List<NewsData>> get() = _newsLiveData
 
     private val _errorLiveData = MutableLiveData<Int>()
     val errorLiveData: LiveData<Int> get() = _errorLiveData
@@ -53,12 +54,5 @@ class NewsViewModel @Inject constructor(
 
     fun setToken(token: String) {
         repository.setToken(token)
-    }
-
-    fun deleteAll() {
-        viewModelScope.launch {
-            repository.delete(repository.getAll())
-            _newsLiveData.value = repository.getAll()
-        }
     }
 }

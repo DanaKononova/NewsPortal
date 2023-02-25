@@ -2,7 +2,9 @@ package com.example.newsportal.data
 
 import com.example.newsportal.data.dataBase.NewsEntity
 import com.example.newsportal.data.mappers.NewsArticleMapper
+import com.example.newsportal.data.mappers.NewsEntityMapper
 import com.example.newsportal.domain.Repository
+import com.example.newsportal.domain.models.NewsData
 import com.example.newsportal.source.DataBaseSource
 import com.example.newsportal.source.UserDataSource
 import kotlinx.coroutines.Dispatchers
@@ -13,9 +15,10 @@ class RepositoryImpl @Inject constructor(
     private val service: NewsService,
     private val mapper: NewsArticleMapper,
     private val netService: UserDataSource,
-    private val dataBaseSource: DataBaseSource
+    private val dataBaseSource: DataBaseSource,
+    private val entityMapper: NewsEntityMapper
 ) : Repository {
-    override suspend fun getNews(isConnected: Boolean): List<NewsEntity> {
+    override suspend fun getNews(isConnected: Boolean): List<NewsData> {
         return withContext(Dispatchers.IO) {
             if (isConnected) {
                 val obj =
@@ -23,9 +26,9 @@ class RepositoryImpl @Inject constructor(
                 val newsList = (obj.article ?: listOf()).map { mapper(it) }
                 dataBaseSource.delete(dataBaseSource.getAll())
                 dataBaseSource.insertAll(newsList)
-                newsList
+                newsList.map { entityMapper(it) }
             } else {
-                dataBaseSource.getAll()
+                dataBaseSource.getAll().map { entityMapper(it) }
             }
         }
     }
