@@ -18,7 +18,7 @@ class SourceModule {
         return context.getSharedPreferences(PREFS_KEY, MODE_PRIVATE)
     }
 
-    companion object{
+    companion object {
         private const val PREFS_KEY = "prefs_key"
     }
 }

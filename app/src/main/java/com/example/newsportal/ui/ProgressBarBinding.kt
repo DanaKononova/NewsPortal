@@ -7,7 +7,7 @@ import androidx.databinding.BindingAdapter
 object ProgressBarBinding {
     @JvmStatic
     @BindingAdapter("goneUnless")
-    fun ProgressBar.loading (visible: Boolean) {
+    fun ProgressBar.loading(visible: Boolean) {
         isVisible = visible
     }
 }

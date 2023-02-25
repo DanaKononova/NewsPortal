@@ -1,10 +1,14 @@
 package com.example.newsportal.di
 
+import android.content.Context
+import android.provider.Settings.Global.getString
+import com.example.newsportal.R
 import com.example.newsportal.data.NewsService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">NewsPortal</string>
-    <string name="socketTimeout">Socket Timeout Exception</string>
-    <string name="exception">Exception</string>
+    <string name="socketTimeout">Internet error</string>
+    <string name="exception">Unknown error</string>
+    <string name="newsAPIUrl">https://newsapi.org/v2/</string>
+    <string name="emptyDB">Empty data base</string>
+    <string name="noConnection">No Internet connection</string>
 </resources>
