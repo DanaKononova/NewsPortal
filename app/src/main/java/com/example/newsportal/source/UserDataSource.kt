@@ -9,11 +9,11 @@ class UserDataSource @Inject constructor(
 ) {
     fun getUserToken(): String = prefs.getString(TOKEN_KEY, EMPTY_STRING).orEmpty()
 
-    fun setUserToken(token: String) = prefs.edit{
+    fun setUserToken(token: String) = prefs.edit {
         putString(TOKEN_KEY, token)
     }
 
-    companion object{
+    companion object {
         private const val EMPTY_STRING = ""
         private const val TOKEN_KEY = "TOKEN_KEY"
     }
