@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsportal.R
-import com.example.newsportal.data.dataBase.NewsEntity
 import com.example.newsportal.domain.Repository
 import com.example.newsportal.domain.models.NewsData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,15 @@ class NewsViewModel @Inject constructor(
     private val _loadingLiveData = MutableLiveData<Boolean>()
     val loadingLiveData: LiveData<Boolean> get() = _loadingLiveData
 
+    private val _noInternetLiveData = MutableLiveData<Boolean>()
+    val noInternetLiveData: LiveData<Boolean> get() = _noInternetLiveData
+
     private val handler = CoroutineExceptionHandler { _, throwable: Throwable ->
+        viewModelScope.launch {
+            _newsLiveData.value = repository.getNews(false)
+            _loadingLiveData.value = false
+            _noInternetLiveData.value = true
+        }
         when (throwable) {
             is SocketTimeoutException -> {
                 _errorLiveData.value = R.string.socketTimeout
@@ -36,10 +43,11 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getNews(isConnected: Boolean) {
+    fun getNews() {
         _loadingLiveData.value = true
+        _noInternetLiveData.value = false
         viewModelScope.launch(handler) {
-            _newsLiveData.value = repository.getNews(isConnected)
+            _newsLiveData.value = repository.getNews(true)
             _loadingLiveData.value = false
         }
     }
