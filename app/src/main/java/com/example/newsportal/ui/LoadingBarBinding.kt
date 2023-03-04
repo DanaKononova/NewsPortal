@@ -1,13 +1,14 @@
 package com.example.newsportal.ui
 
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 
-object ProgressBarBinding {
+object LoadingBarBinding {
     @JvmStatic
     @BindingAdapter("goneUnless")
-    fun ProgressBar.loading(visible: Boolean) {
-        isVisible = visible
+    fun LoadingBarView.setVisibility(visible: Boolean?) {
+        if (visible != null) {
+            isVisible = visible
+        }
     }
 }
