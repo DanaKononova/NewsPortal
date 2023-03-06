@@ -13,18 +13,23 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsportal.HiltApplication
 import com.example.newsportal.R
 import com.example.newsportal.databinding.ActivityMainBinding
+import com.example.newsportal.di.ViewModelFactory
 import com.example.newsportal.network.NetworkManager
-import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel by viewModels<NewsViewModel>()
+   // private val viewModel by viewModels<NewsViewModel>()
     private val networkManager = NetworkManager()
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: NewsViewModel by viewModels { factory }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as HiltApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)

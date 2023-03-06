@@ -7,13 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsportal.R
 import com.example.newsportal.domain.Repository
 import com.example.newsportal.domain.models.NewsData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
-@HiltViewModel
 class NewsViewModel @Inject constructor(
     private val repository: Repository,
 ) : ViewModel() {

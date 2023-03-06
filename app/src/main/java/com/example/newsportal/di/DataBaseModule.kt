@@ -6,19 +6,18 @@ import com.example.newsportal.data.dataBase.NewsDao
 import com.example.newsportal.data.dataBase.NewsDataBase
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 class DataBaseModule {
     @Provides
-    fun provideDataBase(@ApplicationContext context: Context): NewsDataBase {
+    @Singleton
+    fun provideDataBase(context: Context): NewsDataBase {
         return Room.databaseBuilder(context, NewsDataBase::class.java, "NewsList")
             .build()
     }
 
     @Provides
+    @Singleton
     fun provideUserDao(db: NewsDataBase): NewsDao = db.userDao()
 }
