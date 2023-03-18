@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -47,12 +46,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (networkManager.isNetworkAvailable(this)) {
-            viewModel.getNews(true)
+            viewModel.getNews()
         } else {
             if (viewModel.isDataBaseEmpty()) {
                 Toast.makeText(this, getString(R.string.emptyDB), Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.getNews(false)
+                viewModel.getNews()
                 Toast.makeText(this, getString(R.string.noConnection), Toast.LENGTH_SHORT).show()
             }
         }
