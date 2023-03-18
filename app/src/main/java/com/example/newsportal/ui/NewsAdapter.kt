@@ -3,9 +3,8 @@ package com.example.newsportal.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsportal.data.dataBase.NewsEntity
 import com.example.newsportal.databinding.RvNewsBinding
-import com.example.newsportal.domain.models.NewsData
+import com.example.domain.models.NewsData
 
 class NewsAdapter(private val itemCLick: (String) -> Unit) :
     RecyclerView.Adapter<NewsViewHolder>() {

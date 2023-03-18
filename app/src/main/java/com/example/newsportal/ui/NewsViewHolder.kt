@@ -2,9 +2,8 @@ package com.example.newsportal.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.newsportal.data.dataBase.NewsEntity
 import com.example.newsportal.databinding.RvNewsBinding
-import com.example.newsportal.domain.models.NewsData
+import com.example.domain.models.NewsData
 
 class NewsViewHolder(
     private val itemNewsBinding: RvNewsBinding,
