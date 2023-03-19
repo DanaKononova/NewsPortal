@@ -58,12 +58,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (networkManager.isNetworkAvailable(this)) {
-            viewModel.getNews()
+            viewModel.getNews("Belarus")
         } else {
             if (viewModel.isDataBaseEmpty()) {
                 Toast.makeText(this, getString(R.string.emptyDB), Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.getNews()
+                viewModel.getNews("Belarus")
                 Toast.makeText(this, getString(R.string.noConnection), Toast.LENGTH_SHORT).show()
             }
         }

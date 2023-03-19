@@ -17,11 +17,11 @@ class RepositoryImpl @Inject constructor(
     private val dataBaseSource: DataBaseSource,
     private val entityMapper: NewsEntityMapper
 ) : Repository {
-    override suspend fun getNews(isConnected: Boolean): List<NewsData> {
+    override suspend fun getNews(query: String, isConnected: Boolean): List<NewsData> {
         return withContext(Dispatchers.IO) {
             if (isConnected) {
                 val obj =
-                    service.getNews(netService.getUserToken()).execute().body() ?: throw Exception()
+                    service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
                 val newsList = (obj.article ?: listOf()).map { mapper(it) }
                 dataBaseSource.delete(dataBaseSource.getAll())
                 dataBaseSource.insertAll(newsList)

@@ -29,7 +29,7 @@ class NewsViewModel @Inject constructor(
 
     private val handler = CoroutineExceptionHandler { _, throwable: Throwable ->
         viewModelScope.launch {
-            _newsLiveData.value = repository.getNews(false)
+            _newsLiveData.value = repository.getNews("",false)
             _loadingLiveData.value = false
             _noInternetLiveData.value = true
         }
@@ -41,11 +41,11 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getNews() {
+    fun getNews(query: String) {
         _loadingLiveData.value = true
         _noInternetLiveData.value = false
         viewModelScope.launch(handler) {
-            _newsLiveData.value = repository.getNews(true)
+            _newsLiveData.value = repository.getNews(query, true)
             _loadingLiveData.value = false
         }
     }

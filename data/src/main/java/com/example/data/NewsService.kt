@@ -10,7 +10,7 @@ interface NewsService {
     @GET("everything")
     fun getNews(
         @Header("x-api-key") apiKey: String, //= "273f20ec5b99445fb433eed37faf3eb5"
-        @Query("q") str: String = "Belarus",
+        @Query("q") str: String,
         @Query("sortBy") sort: String = "popularity"
     ): Call<NewsResponse>
 }
