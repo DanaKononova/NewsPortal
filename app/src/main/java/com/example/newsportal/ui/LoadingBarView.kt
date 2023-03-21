@@ -18,7 +18,6 @@ class LoadingBarView @JvmOverloads constructor(
         strokeWidth = 15f
     }
 
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         var alpha = 0f

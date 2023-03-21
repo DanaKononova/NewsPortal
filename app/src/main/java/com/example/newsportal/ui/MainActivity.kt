@@ -1,35 +1,47 @@
 package com.example.newsportal.ui
 
 import android.content.Intent
-import android.database.DatabaseUtils
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.core.ViewModelFactory
+import com.example.feature.SecondActivity
+import com.example.newsportal.HiltApplication
 import com.example.newsportal.R
 import com.example.newsportal.databinding.ActivityMainBinding
 import com.example.newsportal.network.NetworkManager
-import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel by viewModels<NewsViewModel>()
+   // private val viewModel by viewModels<NewsViewModel>()
     private val networkManager = NetworkManager()
+    @Inject
+    lateinit var factory: ViewModelFactory
+    private val viewModel: NewsViewModel by viewModels { factory }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as HiltApplication).appComponent.inject(this)
         super.onCreate(savedInstanceState)
         val binding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        val transferBt = findViewById<Button>(R.id.transferBt)
+
+        transferBt.setOnClickListener {
+            val intent = Intent(this, SecondActivity::class.java)
+            startActivity(intent)
+        }
 
         val recycler = findViewById<RecyclerView>(R.id.rvSitesList)
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -46,12 +58,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (networkManager.isNetworkAvailable(this)) {
-            viewModel.getNews()
+            viewModel.getNews("Belarus")
         } else {
             if (viewModel.isDataBaseEmpty()) {
                 Toast.makeText(this, getString(R.string.emptyDB), Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.getNews()
+                viewModel.getNews("Belarus")
                 Toast.makeText(this, getString(R.string.noConnection), Toast.LENGTH_SHORT).show()
             }
         }
