@@ -72,6 +72,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, getString(it), Toast.LENGTH_SHORT).show()
         }
 
-        viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
+      //  viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
     }
 }

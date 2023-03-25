@@ -8,11 +8,18 @@ import android.text.TextWatcher
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ViewModelFactory
 import com.example.core.findDependencies
 import com.example.feature.di.DaggerFeatureComponent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -35,29 +42,29 @@ class SecondActivity : AppCompatActivity() {
             this.startActivity(openLinkIntent)
         }
         val editText = findViewById<EditText>(R.id.editText)
-
-        var query: String = "Belarus"
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                query = s.toString()
-                if (query != "") viewModel.getNews(query)
-            }
-        })
-
         val adapter = NewsAdapter(itemClick)
         recycler.adapter = adapter
+
+        editText.addTextChangedListener {  text ->
+            if (text.toString() != "") {
+                viewModel.getNews(text.toString())
+                this.lifecycleScope.launch {
+                    delay(2000)
+                    viewModel.results
+                        .flowWithLifecycle(this@SecondActivity.lifecycle,
+                            Lifecycle.State.STARTED)
+                        .distinctUntilChanged()
+                        .collect { data ->
+                            adapter.setNews(data)
+                        }
+                }
+            } else adapter.setNews(emptyList())
+        }
 
         viewModel.newsLiveData.observe(this) {
             adapter.setNews(it)
         }
 
-        viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
+       // viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
     }
 }

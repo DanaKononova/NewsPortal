@@ -22,7 +22,7 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getNews(query: String, isConnected: Boolean): Flow<List<NewsData>> {
         return withContext(Dispatchers.IO) {
                 val obj =
-                    service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
+                    service.getNews(query).execute().body() ?: throw Exception()
                 val newsList = (obj.article ?: listOf()).map { mapper(it) }
                 dataBaseSource.deleteAll()
                 dataBaseSource.insertAll(newsList)
@@ -37,7 +37,7 @@ class RepositoryImpl @Inject constructor(
     override suspend fun searchNews(query: String, isConnected: Boolean): List<NewsData> {
         return withContext(Dispatchers.IO) {
             val obj =
-                service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
+                service.getNews(query).execute().body() ?: throw Exception()
             val newsList = (obj.article ?: listOf()).map { mapper(it) }
             newsList.map{
                 entityMapper(it)
