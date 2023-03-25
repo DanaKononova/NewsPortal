@@ -27,26 +27,36 @@ class NewsViewModel @Inject constructor(
     private val _noInternetLiveData = MutableLiveData<Boolean>()
     val noInternetLiveData: LiveData<Boolean> get() = _noInternetLiveData
 
-    private val handler = CoroutineExceptionHandler { _, throwable: Throwable ->
-        viewModelScope.launch {
-            _newsLiveData.value = repository.getNews("",false)
-            _loadingLiveData.value = false
-            _noInternetLiveData.value = true
-        }
-        when (throwable) {
-            is SocketTimeoutException -> {
-                _errorLiveData.value = R.string.socketTimeout
-            }
-            else -> _errorLiveData.value = R.string.exception
-        }
-    }
+//    init {
+//        viewModelScope.launch() {
+//            repository.getNews("Apple", true).collect{
+//                _newsLiveData.value = it
+//            }
+//        }
+//    }
+
+//    private val handler = CoroutineExceptionHandler { _, throwable: Throwable ->
+//        viewModelScope.launch {
+//            _newsLiveData.value = repository.getNews("",false)
+//            _loadingLiveData.value = false
+//            _noInternetLiveData.value = true
+//        }
+//        when (throwable) {
+//            is SocketTimeoutException -> {
+//                _errorLiveData.value = R.string.socketTimeout
+//            }
+//            else -> _errorLiveData.value = R.string.exception
+//        }
+//    }
 
     fun getNews(query: String) {
         _loadingLiveData.value = true
         _noInternetLiveData.value = false
-        viewModelScope.launch(handler) {
-            _newsLiveData.value = repository.getNews(query, true)
-            _loadingLiveData.value = false
+        viewModelScope.launch() {
+             repository.getNews(query, true).collect{
+                 _newsLiveData.value = it
+                 _loadingLiveData.value = false
+             }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.newsportal.source
+package com.example.data.source
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

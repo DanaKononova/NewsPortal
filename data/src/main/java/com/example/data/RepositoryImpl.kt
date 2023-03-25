@@ -4,9 +4,11 @@ import com.example.data.mappers.NewsArticleMapper
 import com.example.data.mappers.NewsEntityMapper
 import com.example.domain.Repository
 import com.example.domain.models.NewsData
-import com.example.newsportal.source.DataBaseSource
-import com.example.newsportal.source.UserDataSource
+import com.example.data.source.DataBaseSource
+import com.example.data.source.UserDataSource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -17,17 +19,28 @@ class RepositoryImpl @Inject constructor(
     private val dataBaseSource: DataBaseSource,
     private val entityMapper: NewsEntityMapper
 ) : Repository {
-    override suspend fun getNews(query: String, isConnected: Boolean): List<NewsData> {
+    override suspend fun getNews(query: String, isConnected: Boolean): Flow<List<NewsData>> {
         return withContext(Dispatchers.IO) {
-            if (isConnected) {
                 val obj =
                     service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
                 val newsList = (obj.article ?: listOf()).map { mapper(it) }
-                dataBaseSource.delete(dataBaseSource.getAll())
+                dataBaseSource.deleteAll()
                 dataBaseSource.insertAll(newsList)
-                newsList.map { entityMapper(it) }
-            } else {
-                dataBaseSource.getAll().map { entityMapper(it) }
+            dataBaseSource.getAll().map{ list ->
+                list.map {
+                    entityMapper(it)
+                }
+            }
+        }
+    }
+
+    override suspend fun searchNews(query: String, isConnected: Boolean): List<NewsData> {
+        return withContext(Dispatchers.IO) {
+            val obj =
+                service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
+            val newsList = (obj.article ?: listOf()).map { mapper(it) }
+            newsList.map{
+                entityMapper(it)
             }
         }
     }

@@ -17,7 +17,7 @@ class SecondViewModel @Inject constructor(
 
     fun getNews(query: String) {
         viewModelScope.launch() {
-            _newsLiveData.value = repository.getNews(query, true)
+            _newsLiveData.value = repository.searchNews(query, true)
         }
     }
 
