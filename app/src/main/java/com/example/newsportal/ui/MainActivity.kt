@@ -13,7 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ViewModelFactory
-import com.example.feature.SecondActivity
+import com.example.feature.ui.SecondActivity
 import com.example.newsportal.HiltApplication
 import com.example.newsportal.R
 import com.example.newsportal.databinding.ActivityMainBinding
@@ -21,7 +21,7 @@ import com.example.newsportal.network.NetworkManager
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-   // private val viewModel by viewModels<NewsViewModel>()
+
     private val networkManager = NetworkManager()
     @Inject
     lateinit var factory: ViewModelFactory
@@ -72,6 +72,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, getString(it), Toast.LENGTH_SHORT).show()
         }
 
-      //  viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
+        viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
     }
 }

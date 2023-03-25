@@ -1,10 +1,8 @@
-package com.example.feature
+package com.example.feature.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,12 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ViewModelFactory
 import com.example.core.findDependencies
+import com.example.feature.R
 import com.example.feature.di.DaggerFeatureComponent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 class SecondActivity : AppCompatActivity() {
 
@@ -47,9 +45,9 @@ class SecondActivity : AppCompatActivity() {
 
         editText.addTextChangedListener {  text ->
             if (text.toString() != "") {
-                viewModel.getNews(text.toString())
+                viewModel.setQuery(text.toString())
                 this.lifecycleScope.launch {
-                    delay(2000)
+                    delay(6000)
                     viewModel.results
                         .flowWithLifecycle(this@SecondActivity.lifecycle,
                             Lifecycle.State.STARTED)
@@ -61,10 +59,6 @@ class SecondActivity : AppCompatActivity() {
             } else adapter.setNews(emptyList())
         }
 
-        viewModel.newsLiveData.observe(this) {
-            adapter.setNews(it)
-        }
-
-       // viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
+        viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")
     }
 }
