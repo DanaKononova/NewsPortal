@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_purple"
-    tools:context=".SecondActivity">
+    tools:context=".ui.SecondActivity">
 
         <EditText
             android:id="@+id/editText"
             android:hint="@string/editText"
+            android:textColor="@color/black"
             android:layout_width="0dp"
             app:layout_constraintWidth_percent="0.5"
             android:background="@color/white"

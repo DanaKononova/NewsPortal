@@ -1,20 +1,25 @@
-package com.example.feature
+package com.example.feature.ui
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.ViewModelFactory
 import com.example.core.findDependencies
+import com.example.feature.R
 import com.example.feature.di.DaggerFeatureComponent
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 class SecondActivity : AppCompatActivity() {
 
@@ -35,27 +40,23 @@ class SecondActivity : AppCompatActivity() {
             this.startActivity(openLinkIntent)
         }
         val editText = findViewById<EditText>(R.id.editText)
-
-        var query: String = "Belarus"
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                query = s.toString()
-                if (query != "") viewModel.getNews(query)
-            }
-        })
-
         val adapter = NewsAdapter(itemClick)
         recycler.adapter = adapter
 
-        viewModel.newsLiveData.observe(this) {
-            adapter.setNews(it)
+        this.lifecycleScope.launch {
+            viewModel.results
+                .flowWithLifecycle(this@SecondActivity.lifecycle,
+                    Lifecycle.State.STARTED)
+                .distinctUntilChanged()
+                .collect { data ->
+                    adapter.setNews(data)
+                }
+        }
+
+        editText.addTextChangedListener {  text ->
+            if (text.toString() != "") {
+                viewModel.setQuery(text.toString())
+            } else adapter.setNews(emptyList())
         }
 
         viewModel.setToken("273f20ec5b99445fb433eed37faf3eb5")

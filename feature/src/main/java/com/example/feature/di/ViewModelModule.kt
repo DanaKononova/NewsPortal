@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.ViewModelFactory
 import com.example.core.ViewModelKey
-import com.example.feature.SecondViewModel
+import com.example.feature.ui.SecondViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

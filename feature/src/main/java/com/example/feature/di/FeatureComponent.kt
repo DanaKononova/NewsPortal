@@ -1,8 +1,7 @@
 package com.example.feature.di
 
-import com.example.feature.SecondActivity
+import com.example.feature.ui.SecondActivity
 import dagger.Component
-
 
 @Component(modules = [ViewModelModule::class], dependencies = [FeatureDependencies::class])
 interface FeatureComponent {
