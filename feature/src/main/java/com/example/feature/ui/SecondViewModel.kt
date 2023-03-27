@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.Repository
 import com.example.domain.models.NewsData
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -15,7 +16,9 @@ class SecondViewModel @Inject constructor(
     fun setQuery(query: String) {
         trigger.value = query
     }
+
     val results: Flow<List<NewsData>> = trigger.mapLatest { query ->
+        delay(5000)
         repository.searchNews(query)
     }.stateIn(
         scope = viewModelScope,

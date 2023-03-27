@@ -43,19 +43,19 @@ class SecondActivity : AppCompatActivity() {
         val adapter = NewsAdapter(itemClick)
         recycler.adapter = adapter
 
+        this.lifecycleScope.launch {
+            viewModel.results
+                .flowWithLifecycle(this@SecondActivity.lifecycle,
+                    Lifecycle.State.STARTED)
+                .distinctUntilChanged()
+                .collect { data ->
+                    adapter.setNews(data)
+                }
+        }
+
         editText.addTextChangedListener {  text ->
             if (text.toString() != "") {
                 viewModel.setQuery(text.toString())
-                this.lifecycleScope.launch {
-                    delay(6000)
-                    viewModel.results
-                        .flowWithLifecycle(this@SecondActivity.lifecycle,
-                            Lifecycle.State.STARTED)
-                        .distinctUntilChanged()
-                        .collect { data ->
-                            adapter.setNews(data)
-                        }
-                }
             } else adapter.setNews(emptyList())
         }
 
