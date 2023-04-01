@@ -1,12 +1,16 @@
 package com.example.domain
 
 import com.example.domain.models.NewsData
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.Single
 
 interface Repository {
-    suspend fun getNews(query: String): Flow<List<NewsData>>
+    fun getNews(): Observable<List<NewsData>>
 
-    suspend fun searchNews(query: String): List<NewsData>
+    fun getResponseToDataBase(): Completable
+
+    fun searchNews(query: String): Single<List<NewsData>>
 
     fun setToken(token: String)
 }

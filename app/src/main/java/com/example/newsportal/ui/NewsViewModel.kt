@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsportal.R
 import com.example.domain.Repository
 import com.example.domain.models.NewsData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -27,22 +30,32 @@ class NewsViewModel @Inject constructor(
     private val _noInternetLiveData = MutableLiveData<Boolean>()
     val noInternetLiveData: LiveData<Boolean> get() = _noInternetLiveData
 
-//    init {
-//        viewModelScope.launch() {
-//            repository.getNews("Apple", true).collect{
-//                _newsLiveData.value = it
-//            }
-//        }
+    private val composite = CompositeDisposable()
 
-    fun getNews(query: String) {
+    init {
+        refreshData()
+        getNews()
+    }
+
+    private fun refreshData() {
+        val disposable = repository.getResponseToDataBase()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+        composite.add(disposable)
+    }
+
+    fun getNews() {
         _loadingLiveData.value = true
         _noInternetLiveData.value = false
-        viewModelScope.launch() {
-             repository.getNews(query).collect{
-                 _newsLiveData.value = it
-                 _loadingLiveData.value = false
-             }
-        }
+        val disposable = repository.getNews()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                _newsLiveData.value = it
+                _loadingLiveData.value = false
+            }
+        composite.add(disposable)
     }
 
     fun isDataBaseEmpty(): Boolean {
@@ -55,5 +68,10 @@ class NewsViewModel @Inject constructor(
 
     fun setToken(token: String) {
         repository.setToken(token)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        composite.clear()
     }
 }

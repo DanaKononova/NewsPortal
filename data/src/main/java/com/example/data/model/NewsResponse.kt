@@ -1,7 +1,7 @@
 package com.example.data.model
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 data class NewsResponse(
-    @SerializedName("articles") val article: List<NewsArticleResponse>? = null
+    @Json(name = "articles") val article: List<NewsArticleResponse>? = null
 )

@@ -23,6 +23,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private val networkManager = NetworkManager()
+
     @Inject
     lateinit var factory: ViewModelFactory
     private val viewModel: NewsViewModel by viewModels { factory }
@@ -58,12 +59,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (networkManager.isNetworkAvailable(this)) {
-            viewModel.getNews("Apple")
+            viewModel.getNews()
         } else {
             if (viewModel.isDataBaseEmpty()) {
                 Toast.makeText(this, getString(R.string.emptyDB), Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.getNews("Apple")
+                viewModel.getNews()
                 Toast.makeText(this, getString(R.string.noConnection), Toast.LENGTH_SHORT).show()
             }
         }

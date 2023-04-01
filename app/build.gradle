@@ -45,20 +45,35 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    //Moshi
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.moshi:moshi:1.12.0'
+
+    //http
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+
+    //glide
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.8.0'
 
-    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    //fragment
+    implementation 'androidx.fragment:fragment-ktx:1.5.6'
 
+    //dagger2
     implementation 'com.google.dagger:dagger:2.44'
     kapt 'com.google.dagger:dagger-compiler:2.44'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+    //room
+    implementation "androidx.room:room-ktx:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
 
-    implementation "androidx.room:room-ktx:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    //rxjava2
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
 
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"

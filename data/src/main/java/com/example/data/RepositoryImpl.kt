@@ -1,11 +1,17 @@
 package com.example.data
 
+import com.example.data.dataBase.NewsEntity
 import com.example.data.mappers.NewsArticleMapper
 import com.example.data.mappers.NewsEntityMapper
 import com.example.domain.Repository
 import com.example.domain.models.NewsData
 import com.example.data.source.DataBaseSource
 import com.example.data.source.UserDataSource
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,29 +25,25 @@ class RepositoryImpl @Inject constructor(
     private val dataBaseSource: DataBaseSource,
     private val entityMapper: NewsEntityMapper
 ) : Repository {
-    override suspend fun getNews(query: String): Flow<List<NewsData>> {
-        return withContext(Dispatchers.IO) {
-                val obj =
-                    service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
-                val newsList = (obj.article ?: listOf()).map { mapper(it) }
-                dataBaseSource.deleteAll()
-                dataBaseSource.insertAll(newsList)
-            dataBaseSource.getAll().map{ list ->
-                list.map {
-                    entityMapper(it)
-                }
-            }
+    override fun getResponseToDataBase(): Completable {
+        return service.getNews(netService.getUserToken(), "Belarus").flatMapCompletable {
+            val newsList = it.article?.map { article -> mapper(article) } ?: emptyList()
+            dataBaseSource.insertAll(newsList)
+            Completable.complete()
         }
     }
 
-    override suspend fun searchNews(query: String): List<NewsData> {
-        return withContext(Dispatchers.IO) {
-            val obj =
-                service.getNews(netService.getUserToken(), query).execute().body() ?: throw Exception()
-            val newsList = (obj.article ?: listOf()).map { mapper(it) }
-            newsList.map{
-                entityMapper(it)
-            }
+    override fun getNews(): Observable<List<NewsData>> {
+        val newsList = dataBaseSource.getAll().map { list ->
+            list.map { entityMapper(it) }
+        }
+        return newsList
+    }
+
+    override fun searchNews(query: String): Single<List<NewsData>> {
+        return service.getNews(netService.getUserToken(), query).map {
+            val newsList = (it.article ?: listOf()).map { it1 -> mapper(it1) }
+            newsList.map { it1 -> entityMapper(it1) }
         }
     }
 
