@@ -10,8 +10,10 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SecondViewModel @Inject constructor(
@@ -26,12 +28,23 @@ class SecondViewModel @Inject constructor(
 
     private val composite = CompositeDisposable()
 
+    private val publishSubject = PublishSubject.create<String>()
+
+    init {
+        observeQuery()
+    }
+
     fun getNews(query: String) {
-        _loadingLiveData.value = true
-        val disposable = repository.searchNews(query)
+        publishSubject.onNext(query)
+    }
+
+    private fun observeQuery(){
+        val disposable = publishSubject
+            .debounce (5000L, TimeUnit.MILLISECONDS)
+            .switchMapSingle { repository.searchNews(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { value -> _newsLiveData.value = value }
+            .subscribe{ value -> _newsLiveData.value = value}
 
         composite.add(disposable)
     }

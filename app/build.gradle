@@ -47,9 +47,11 @@ dependencies {
 
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+
     //Moshi
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.moshi:moshi:1.12.0'
 
     //http
@@ -73,7 +75,6 @@ dependencies {
     //rxjava2
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
 
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"

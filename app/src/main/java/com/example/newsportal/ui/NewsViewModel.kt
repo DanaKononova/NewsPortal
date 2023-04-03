@@ -51,10 +51,14 @@ class NewsViewModel @Inject constructor(
         val disposable = repository.getNews()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
+            .subscribe ({
                 _newsLiveData.value = it
                 _loadingLiveData.value = false
-            }
+            },
+                {
+                    _errorLiveData.value = it.hashCode()
+                    _loadingLiveData.value = false
+                })
         composite.add(disposable)
     }
 

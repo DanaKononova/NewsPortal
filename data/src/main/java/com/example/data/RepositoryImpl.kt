@@ -42,8 +42,8 @@ class RepositoryImpl @Inject constructor(
 
     override fun searchNews(query: String): Single<List<NewsData>> {
         return service.getNews(netService.getUserToken(), query).map {
-            val newsList = (it.article ?: listOf()).map { it1 -> mapper(it1) }
-            newsList.map { it1 -> entityMapper(it1) }
+            val newsList = (it.article ?: listOf()).map { article -> mapper(article) }
+            newsList.map { article -> entityMapper(article) }
         }
     }
 
