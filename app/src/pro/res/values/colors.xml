@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="title">#330213</color>
+    <color name="description">#050505</color>
+    <color name="url">#391F67</color>
+    <color name="delimeter">#8E123C</color>
+    <color name="background">#ECC3D1</color>
+</resources>
